@@ -1,49 +1,1258 @@
-﻿<!DOCTYPE html>
+﻿<!-- TEST CHANGE 123 -->
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daily Writing App</title>
-    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.5;
+            color: #333;
+            background-color: #f9f9f9;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 15px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        }
+        
+        h1 {
+            text-align: center;
+            margin: 0 0 10px 0;
+            font-weight: 500;
+            font-size: 20px;
+            color: #444;
+        }
+        
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+        
+        button:hover {
+            background: #43a047;
+        }
+        
+        button:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+        }
+        
+        .prompt-section {
+            margin-bottom: 15px;
+        }
+        
+        #prompt-display {
+            font-size: 16px;
+            margin: 5px 0 15px 0;
+            padding: 10px 15px;
+            background: #f5f5f5;
+            border-radius: 3px;
+            min-height: 20px;
+            color: #555;
+            font-style: italic;
+        }
+        
+        textarea {
+            width: 100%;
+            min-height: 200px;
+            padding: 10px;
+            border: 1px solid #eee;
+            border-radius: 3px;
+            margin: 5px 0;
+            font-family: inherit;
+            box-sizing: border-box;
+            font-size: 15px;
+            resize: vertical;
+        }
+        
+        .timer-display {
+            font-size: 16px;
+            text-align: right;
+            color: #555;
+            margin: 0;
+        }
+        
+        .timer-controls {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin: 5px 0;
+        }
+        
+        .timer-section {
+            background: #f9f9f9;
+            padding: 5px;
+            border-radius: 3px;
+            margin-bottom: 10px;
+        }
+        
+        .timer-buttons {
+            display: flex;
+            gap: 5px;
+        }
+        
+        input[type="range"] {
+            flex: 1;
+            margin: 0 5px;
+        }
+        
+        .section {
+            margin-bottom: 10px;
+            background: #fff;
+            overflow: hidden;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .section-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: #666;
+            margin: 0;
+        }
+        
+        .section-content {
+            padding: 5px 0;
+        }
+        
+        .compact-timer {
+            display: inline-flex;
+            align-items: center;
+            background: #f5f5f5;
+            border-radius: 3px;
+            padding: 2px 8px;
+            font-size: 14px;
+        }
+        
+        #entries-list {
+            max-height: 150px;
+            overflow-y: auto;
+            margin-top: 5px;
+        }
+        
+        .entry-item {
+            padding: 5px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+        }
+        
+        .entry-item:hover {
+            background: #f9f9f9;
+        }
+        
+        .entry-item.active {
+            background: #f1f8e9;
+            border-left: 3px solid #4CAF50;
+        }
+        
+        .entry-content {
+            flex-grow: 1;
+            cursor: pointer;
+        }
+        
+        .delete-btn {
+            background: #f44336;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            padding: 3px 6px;
+            cursor: pointer;
+            font-size: 11px;
+            margin-left: 5px;
+        }
+        
+        .delete-btn:hover {
+            background: #e53935;
+        }
+        
+        .status-message {
+            background: #e8f5e9;
+            color: #2e7d32;
+            padding: 5px;
+            margin: 5px 0;
+            border-radius: 3px;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.5s;
+            font-size: 13px;
+        }
+        
+        .status-message.show {
+            opacity: 1;
+        }
+        
+        .button-group {
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+            gap: 15px;
+        }
+        
+        .mic-btn {
+            background: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            padding: 6px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin: 0;
+        }
+        
+        .mic-btn:hover {
+            background: #1e88e5;
+        }
+        
+        .mic-btn.recording {
+            background: #f44336;
+        }
+        
+        .mic-btn-text {
+            margin-left: 5px;
+            font-weight: 500;
+            font-size: 13px;
+        }
+        
+        .recording-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background-color: #f44336;
+            border-radius: 50%;
+            margin-right: 5px;
+            animation: pulse 1.5s infinite;
+        }
+        
+        .mic-icon {
+            width: 16px;
+            height: 16px;
+            fill: white;
+        }
+        
+        /* Calendar styles */
+        .calendar {
+            width: 100%;
+            margin-top: 5px;
+        }
+        
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+        
+        .calendar-month {
+            font-weight: 500;
+            font-size: 14px;
+        }
+        
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 2px;
+        }
+        
+        .calendar-day-header {
+            text-align: center;
+            font-weight: 500;
+            padding: 3px;
+            font-size: 12px;
+        }
+        
+        .calendar-day {
+            text-align: center;
+            padding: 5px;
+            border-radius: 3px;
+            cursor: pointer;
+            border: 1px solid #f0f0f0;
+            font-size: 12px;
+        }
+        
+        .calendar-day:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .calendar-day.has-entry {
+            background-color: #e8f5e9;
+            font-weight: bold;
+        }
+        
+        .calendar-day.selected {
+            background-color: #4CAF50;
+            color: white;
+        }
+        
+        .calendar-day.other-month {
+            color: #ccc;
+            background-color: #f9f9f9;
+        }
+        
+        .view-toggle {
+            display: flex;
+            gap: 5px;
+            margin: 10px 0;
+        }
+        
+        .view-toggle button {
+            flex: 1;
+            background: #f5f5f5;
+            color: #333;
+            border: 1px solid #ddd;
+            font-size: 12px;
+            padding: 5px 8px;
+        }
+        
+        .view-toggle button.active {
+            background: #4CAF50;
+            color: white;
+            border-color: #4CAF50;
+        }
+        
+        /* Calendar modal */
+        .calendar-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .calendar-modal-content {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            max-width: 90%;
+            width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        
+        .calendar-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 20px;
+            cursor: pointer;
+            color: #777;
+        }
+        
+        /* Minimalist timer display */
+        .timer-display-minimal {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #f5f5f5;
+            padding: 5px 10px;
+            border-radius: 3px;
+            margin: 5px 0;
+        }
+        
+        .timer-time {
+            font-weight: 500;
+            font-size: 16px;
+        }
+        
+        .timer-controls-minimal {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .archive-section {
+            margin-top: 15px;
+            border-top: 1px solid #eee;
+            padding-top: 10px;
+        }
+        
+        .archive-button {
+            width: 100%;
+            text-align: center;
+            padding: 8px;
+            background: #f5f5f5;
+            color: #555;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .archive-button:hover {
+            background: #e9e9e9;
+        }
+        
+        .archive-content {
+            display: none;
+            margin-top: 10px;
+        }
+        
+        .archive-content.visible {
+            display: block;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1>Daily Writing Prompt</h1>
-        </header>
+        <h1>Daily Writing App</h1>
         
-        <section class="prompt-section">
+        <div class="prompt-section">
+            <div class="button-group">
+                <button id="generate-prompt-btn">Generate Prompt</button>
+                <div class="timer-display-minimal">
+                    <div class="timer-time">
+                        <span id="minutes">15</span>:<span id="seconds">00</span>
+                    </div>
+                    <div class="timer-controls-minimal">
+                        <input type="range" id="timer-slider" min="1" max="60" value="15" style="width: 100px;">
+                        <div class="timer-buttons" id="timer-buttons">
+                            <button id="start-timer-btn">Start</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div id="prompt-display">Click "Generate Prompt" to get started</div>
-            <button id="generate-btn">Generate Prompt</button>
-        </section>
+        </div>
         
-        <section class="timer-section">
-            <div class="timer-display">
-                <span id="minutes">15</span>:<span id="seconds">00</span>
-            </div>
-            <div class="timer-controls">
-                <input type="range" id="timer-slider" min="1" max="60" value="15">
-                <span id="timer-value">15 minutes</span>
-                <button id="start-timer">Start Timer</button>
-                <button id="pause-timer">Pause</button>
-                <button id="reset-timer">Reset</button>
-            </div>
-        </section>
+        <textarea id="writing-area" placeholder="Start writing here..."></textarea>
         
-        <section class="writing-section">
-            <div class="writing-controls">
-                <button id="voice-btn">Start Voice Dictation</button>
-                <button id="save-btn">Save Entry</button>
-            </div>
-            <textarea id="writing-area" placeholder="Start writing here..."></textarea>
-        </section>
+        <div class="button-group">
+            <button id="mic-btn" class="mic-btn" title="Start voice dictation">
+                <svg class="mic-icon" viewBox="0 0 24 24">
+                    <path d="M12,2A3,3 0 0,1 15,5V11A3,3 0 0,1 12,14A3,3 0 0,1 9,11V5A3,3 0 0,1 12,2M19,11C19,14.53 16.39,17.44 13,17.93V21H11V17.93C7.61,17.44 5,14.53 5,11H7A5,5 0 0,0 12,16A5,5 0 0,0 17,11H19Z" />
+                </svg>
+                <span class="mic-btn-text">Start</span>
+            </button>
+            <button id="save-entry-btn" disabled>Save Entry</button>
+        </div>
         
-        <section class="archives-section">
-            <h2>Previous Entries</h2>
-            <div id="entries-list"></div>
-        </section>
+        <div id="status-message" class="status-message"></div>
+        
+        <div class="archive-section">
+            <button id="archive-btn" class="archive-button">Archive</button>
+            <div id="archive-content" class="archive-content">
+                <div class="view-toggle">
+                    <button id="list-view-btn" class="active">List View</button>
+                    <button id="calendar-view-btn">Calendar View</button>
+                </div>
+                
+                <div id="entries-list"></div>
+                <div id="calendar-view" style="display: none;">
+                    <div class="calendar">
+                        <div class="calendar-header">
+                            <button onclick="prevMonth()">&lt; Prev</button>
+                            <div class="calendar-month" id="calendar-month">January 2023</div>
+                            <button onclick="nextMonth()">Next &gt;</button>
+                        </div>
+                        <div class="calendar-grid" id="calendar-days-header">
+                            <div class="calendar-day-header">Sun</div>
+                            <div class="calendar-day-header">Mon</div>
+                            <div class="calendar-day-header">Tue</div>
+                            <div class="calendar-day-header">Wed</div>
+                            <div class="calendar-day-header">Thu</div>
+                            <div class="calendar-day-header">Fri</div>
+                            <div class="calendar-day-header">Sat</div>
+                        </div>
+                        <div class="calendar-grid" id="calendar-days">
+                            <!-- Calendar days will be generated here -->
+                        </div>
+                    </div>
+                    <div id="calendar-entries"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Calendar Modal -->
+    <div id="calendar-modal" class="calendar-modal">
+        <div class="calendar-modal-content">
+            <span class="calendar-close" onclick="closeCalendarModal()">&times;</span>
+            <h3>Calendar View</h3>
+            <div class="calendar">
+                <div class="calendar-header">
+                    <button onclick="prevMonth()">&lt; Prev</button>
+                    <div class="calendar-month" id="modal-calendar-month">January 2023</div>
+                    <button onclick="nextMonth()">Next &gt;</button>
+                </div>
+                <div class="calendar-grid" id="modal-calendar-days-header">
+                    <div class="calendar-day-header">Sun</div>
+                    <div class="calendar-day-header">Mon</div>
+                    <div class="calendar-day-header">Tue</div>
+                    <div class="calendar-day-header">Wed</div>
+                    <div class="calendar-day-header">Thu</div>
+                    <div class="calendar-day-header">Fri</div>
+                    <div class="calendar-day-header">Sat</div>
+                </div>
+                <div class="calendar-grid" id="modal-calendar-days">
+                    <!-- Calendar days will be generated here -->
+                </div>
+            </div>
+            <div id="modal-calendar-entries"></div>
+        </div>
     </div>
 
-    <script src="js/app.js"></script>
+    <script>
+        // App State
+        let timerInterval;
+        let timeLeft = 15 * 60; // 15 minutes in seconds
+        let isTimerRunning = false;
+        let isPaused = false;
+        let currentEntry = {
+            id: new Date().toISOString().split('T')[0] + '-' + Date.now(),
+            date: new Date().toISOString().split('T')[0],
+            prompt: '',
+            content: ''
+        };
+        let recognition;
+        let isRecording = false;
+        let currentView = 'list';
+        let currentCalendarDate = new Date();
+        let selectedDate = null;
+        
+        // Initialize on page load
+        window.onload = function() {
+            // Debug: Clear localStorage if needed
+            // localStorage.removeItem('simpleWritingEntries');
+            
+            displaySavedEntries();
+            
+            // Auto-load today's entry if it exists
+            const entries = getSavedEntries();
+            const todayEntry = entries.find(entry => entry.date === currentEntry.date);
+            if (todayEntry) {
+                loadEntryToEditor(todayEntry);
+            }
+            
+            // Set up speech recognition
+            setupSpeechRecognition();
+            
+            // Initialize calendar
+            renderCalendar();
+            
+            // Set up event listeners
+            setupEventListeners();
+            
+            // Enable/disable save button based on content
+            document.getElementById('writing-area').addEventListener('input', function() {
+                document.getElementById('save-entry-btn').disabled = this.value.trim() === '';
+            });
+            
+            // Debug info
+            console.log('All saved entries:', entries);
+        };
+        
+        function setupEventListeners() {
+            // Button event listeners
+            document.getElementById('generate-prompt-btn').addEventListener('click', generatePrompt);
+            document.getElementById('save-entry-btn').addEventListener('click', saveEntry);
+            document.getElementById('list-view-btn').addEventListener('click', () => switchView('list'));
+            document.getElementById('calendar-view-btn').addEventListener('click', () => switchView('calendar'));
+            document.getElementById('start-timer-btn').addEventListener('click', startTimer);
+            document.getElementById('timer-slider').addEventListener('input', updateTimerValue);
+            
+            // Archive toggle
+            document.getElementById('archive-btn').addEventListener('click', toggleArchive);
+        }
+        
+        function toggleArchive() {
+            const archiveContent = document.getElementById('archive-content');
+            archiveContent.classList.toggle('visible');
+            
+            // If opening the archive and we're in calendar view, render the calendar
+            if (archiveContent.classList.contains('visible') && currentView === 'calendar') {
+                renderCalendar();
+            }
+        }
+        
+        function openCalendarModal(event) {
+            if (event) event.stopPropagation(); // Prevent section toggle
+            document.getElementById('calendar-modal').style.display = 'flex';
+            renderCalendar();
+        }
+        
+        function closeCalendarModal() {
+            document.getElementById('calendar-modal').style.display = 'none';
+        }
+        
+        function generatePrompt() {
+            const promptDisplay = document.getElementById('prompt-display');
+            
+            const prompts = [
+                "Write about a childhood memory that still affects you today.",
+                "Describe a place you've never been to but would love to visit.",
+                "Write a letter to your future self 10 years from now.",
+                "What would you do if you had only one month to live?",
+                "Describe a person who changed your life.",
+                "Write about a time when you faced a difficult challenge and how you overcame it.",
+                "If you could have dinner with any historical figure, who would it be and why?",
+                "Describe your perfect day from start to finish.",
+                "What are three things you're grateful for today and why?",
+                "Write about a book or movie that changed your perspective on something."
+            ];
+            
+            const randomPrompt = prompts[Math.floor(Math.random() * prompts.length)];
+            promptDisplay.textContent = randomPrompt;
+            currentEntry.prompt = randomPrompt;
+            
+            // Close FAB menu if open
+            if (isFabMenuOpen) {
+                toggleFabMenu();
+            }
+        }
+        
+        function updateTimerValue() {
+            const timerSlider = document.getElementById('timer-slider');
+            const minutes = timerSlider.value;
+            
+            timeLeft = minutes * 60;
+            updateTimerDisplay();
+        }
+        
+        function startTimer() {
+            if (isTimerRunning) return;
+            
+            isTimerRunning = true;
+            isPaused = false;
+            
+            // Update timer buttons
+            updateTimerButtons();
+            
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    isTimerRunning = false;
+                    isPaused = false;
+                    timeLeft = 0;
+                    alert("Time's up! Your writing session is complete.");
+                    updateTimerButtons();
+                }
+                
+                updateTimerDisplay();
+            }, 1000);
+            
+            // Close FAB menu if open
+            if (isFabMenuOpen) {
+                toggleFabMenu();
+            }
+        }
+        
+        function pauseTimer() {
+            clearInterval(timerInterval);
+            isTimerRunning = false;
+            isPaused = true;
+            updateTimerButtons();
+        }
+        
+        function resetTimer() {
+            clearInterval(timerInterval);
+            isTimerRunning = false;
+            isPaused = false;
+            const timerSlider = document.getElementById('timer-slider');
+            timeLeft = timerSlider.value * 60;
+            updateTimerDisplay();
+            updateTimerButtons();
+        }
+        
+        function updateTimerButtons() {
+            const timerButtons = document.getElementById('timer-buttons');
+            
+            if (isTimerRunning) {
+                timerButtons.innerHTML = `
+                    <button onclick="pauseTimer()">Pause</button>
+                    <button onclick="resetTimer()">Reset</button>
+                `;
+            } else if (isPaused) {
+                timerButtons.innerHTML = `
+                    <button onclick="startTimer()">Resume</button>
+                    <button onclick="resetTimer()">Reset</button>
+                `;
+            } else {
+                timerButtons.innerHTML = `
+                    <button onclick="startTimer()" id="start-timer-btn">Start</button>
+                `;
+            }
+        }
+        
+        function updateTimerDisplay() {
+            const minutesDisplay = document.getElementById('minutes');
+            const secondsDisplay = document.getElementById('seconds');
+            
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            
+            minutesDisplay.textContent = minutes.toString().padStart(2, '0');
+            secondsDisplay.textContent = seconds.toString().padStart(2, '0');
+        }
+        
+        function newEntry() {
+            const writingArea = document.getElementById('writing-area');
+            
+            // Check for unsaved changes
+            if (writingArea.value.trim() !== '' && 
+                writingArea.value !== currentEntry.content &&
+                !confirm('You have unsaved changes. Start a new entry anyway?')) {
+                return;
+            }
+            
+            // Create new entry
+            currentEntry = {
+                id: new Date().toISOString().split('T')[0] + '-' + Date.now(),
+                date: new Date().toISOString().split('T')[0],
+                prompt: '',
+                content: ''
+            };
+            
+            // Clear UI
+            document.getElementById('prompt-display').textContent = "Click 'Generate Prompt' to get started";
+            writingArea.value = '';
+            
+            // Update entries list to show active state
+            displaySavedEntries();
+            
+            showStatusMessage('Started a new entry');
+        }
+        
+        function showStatusMessage(message) {
+            const statusMessage = document.getElementById('status-message');
+            statusMessage.textContent = message;
+            statusMessage.classList.add('show');
+            
+            setTimeout(() => {
+                statusMessage.classList.remove('show');
+            }, 3000);
+        }
+        
+        function saveEntry() {
+            const writingArea = document.getElementById('writing-area');
+            const content = writingArea.value;
+            
+            if (content.trim() === '') {
+                alert('Please write something before saving.');
+                return;
+            }
+            
+            const promptDisplay = document.getElementById('prompt-display');
+            
+            // Update current entry
+            currentEntry.content = content;
+            currentEntry.prompt = promptDisplay.textContent;
+            currentEntry.lastSaved = new Date().toISOString();
+            
+            // Save to localStorage
+            const entries = getSavedEntries();
+            
+            // Check if we're updating an existing entry
+            const existingIndex = entries.findIndex(e => e.id === currentEntry.id);
+            if (existingIndex >= 0) {
+                entries[existingIndex] = currentEntry;
+            } else {
+                entries.push(currentEntry);
+            }
+            
+            // Save back to localStorage
+            localStorage.setItem('simpleWritingEntries', JSON.stringify(entries));
+            
+            // Clear the writing area
+            writingArea.value = '';
+            
+            // Create a new entry for the next writing session
+            const savedEntryId = currentEntry.id; // Remember the ID of the entry we just saved
+            
+            // Create new entry
+            currentEntry = {
+                id: new Date().toISOString().split('T')[0] + '-' + Date.now(),
+                date: new Date().toISOString().split('T')[0],
+                prompt: '',
+                content: ''
+            };
+            
+            // Clear prompt display
+            promptDisplay.textContent = "Click 'Generate Prompt' to get started";
+            
+            // Refresh the entries list
+            displaySavedEntries();
+            
+            showStatusMessage('Entry saved successfully! Ready for a new entry.');
+            console.log('Saved entry:', savedEntryId);
+        }
+        
+        function getSavedEntries() {
+            try {
+                const entriesJson = localStorage.getItem('simpleWritingEntries');
+                return entriesJson ? JSON.parse(entriesJson) : [];
+            } catch (error) {
+                console.error('Error parsing saved entries:', error);
+                return [];
+            }
+        }
+        
+        function displaySavedEntries() {
+            const entries = getSavedEntries();
+            const entriesList = document.getElementById('entries-list');
+            entriesList.innerHTML = '';
+            
+            if (entries.length === 0) {
+                entriesList.innerHTML = '<p>No saved entries yet.</p>';
+                return;
+            }
+            
+            // Sort entries by date (newest first)
+            entries.sort((a, b) => new Date(b.lastSaved || b.date) - new Date(a.lastSaved || a.date));
+            
+            entries.forEach(entry => {
+                const entryItem = document.createElement('div');
+                entryItem.className = 'entry-item';
+                
+                // Add active class if this is the current entry
+                if (entry.id === currentEntry.id) {
+                    entryItem.classList.add('active');
+                }
+                
+                const promptPreview = entry.prompt 
+                    ? entry.prompt.substring(0, 30) + (entry.prompt.length > 30 ? '...' : '')
+                    : 'No prompt';
+                
+                // Create entry content div (clickable)
+                const entryContent = document.createElement('div');
+                entryContent.className = 'entry-content';
+                entryContent.innerHTML = `
+                    <strong>${entry.date}</strong>: ${promptPreview}
+                `;
+                
+                // Add click event to the content area
+                entryContent.onclick = function() {
+                    console.log('Entry clicked:', entry);
+                    loadEntryToEditor(entry);
+                };
+                
+                // Create delete button
+                const deleteBtn = document.createElement('button');
+                deleteBtn.className = 'delete-btn';
+                deleteBtn.textContent = 'Delete';
+                deleteBtn.onclick = function(e) {
+                    e.stopPropagation(); // Prevent triggering the parent's click event
+                    deleteEntry(entry.id);
+                };
+                
+                // Add elements to entry item
+                entryItem.appendChild(entryContent);
+                entryItem.appendChild(deleteBtn);
+                
+                entriesList.appendChild(entryItem);
+            });
+            
+            // If we're in calendar view, update the calendar too
+            if (currentView === 'calendar') {
+                renderCalendar();
+            }
+        }
+        
+        function loadEntryToEditor(entry) {
+            console.log('Loading entry to editor:', entry);
+            
+            const promptDisplay = document.getElementById('prompt-display');
+            const writingArea = document.getElementById('writing-area');
+            
+            // Check for unsaved changes
+            const currentContent = writingArea.value;
+            if (currentContent.trim() !== '' && 
+                currentContent !== currentEntry.content &&
+                !confirm('You have unsaved changes. Load another entry anyway?')) {
+                return;
+            }
+            
+            // Update the UI
+            promptDisplay.textContent = entry.prompt || "No prompt for this entry";
+            writingArea.value = entry.content || '';
+            
+            // Update current entry reference
+            currentEntry = entry;
+            
+            // Update entries list to show active state
+            displaySavedEntries();
+            
+            showStatusMessage('Loaded entry from ' + entry.date);
+        }
+        
+        function deleteEntry(entryId) {
+            // Ask for confirmation
+            if (!confirm('Are you sure you want to delete this entry? This cannot be undone.')) {
+                return;
+            }
+            
+            // Get current entries
+            const entries = getSavedEntries();
+            
+            // Find the entry to delete
+            const entryIndex = entries.findIndex(entry => entry.id === entryId);
+            
+            if (entryIndex === -1) {
+                showStatusMessage('Error: Entry not found');
+                return;
+            }
+            
+            // Remove the entry
+            entries.splice(entryIndex, 1);
+            
+            // Save back to localStorage
+            localStorage.setItem('simpleWritingEntries', JSON.stringify(entries));
+            
+            // If we're deleting the current entry, create a new one
+            if (currentEntry.id === entryId) {
+                newEntry();
+            }
+            
+            // Refresh the entries list
+            displaySavedEntries();
+            
+            // If in calendar view and a date is selected, refresh that view too
+            if (currentView === 'calendar' && selectedDate) {
+                showEntriesForDate(selectedDate);
+            }
+            
+            showStatusMessage('Entry deleted successfully');
+        }
+        
+        function setupSpeechRecognition() {
+            // Check if browser supports speech recognition
+            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                document.getElementById('mic-btn').style.display = 'none';
+                console.error('Speech recognition not supported in this browser');
+                return;
+            }
+            
+            // Initialize speech recognition
+            recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.continuous = true;
+            recognition.interimResults = true;
+            recognition.lang = 'en-US'; // Set language
+            
+            // Add event listeners for the microphone button
+            const micBtn = document.getElementById('mic-btn');
+            micBtn.addEventListener('click', toggleDictation);
+            
+            // Handle recognition results
+            recognition.onresult = function(event) {
+                const writingArea = document.getElementById('writing-area');
+                let currentPosition = writingArea.selectionStart || writingArea.value.length;
+                let transcript = '';
+                
+                // Get the transcript from the results
+                for (let i = event.resultIndex; i < event.results.length; i++) {
+                    if (event.results[i].isFinal) {
+                        transcript += event.results[i][0].transcript + ' ';
+                    }
+                }
+                
+                // Insert the transcript at the current cursor position
+                if (transcript) {
+                    const beforeText = writingArea.value.substring(0, currentPosition);
+                    const afterText = writingArea.value.substring(currentPosition);
+                    writingArea.value = beforeText + transcript + afterText;
+                    
+                    // Move cursor to end of inserted text
+                    currentPosition += transcript.length;
+                    writingArea.selectionStart = currentPosition;
+                    writingArea.selectionEnd = currentPosition;
+                    writingArea.focus();
+                }
+            };
+            
+            // Handle errors
+            recognition.onerror = function(event) {
+                if (event.error === 'no-speech') {
+                    showStatusMessage('No speech detected. Try again.');
+                } else {
+                    console.error('Speech recognition error:', event.error);
+                    showStatusMessage('Speech recognition error: ' + event.error);
+                    stopDictation();
+                }
+            };
+            
+            // Handle end of recognition
+            recognition.onend = function() {
+                if (isRecording) {
+                    // If we're still supposed to be recording, restart it
+                    // (this happens because recognition times out after a while)
+                    recognition.start();
+                } else {
+                    stopDictation();
+                }
+            };
+        }
+        
+        function toggleDictation() {
+            if (isRecording) {
+                stopDictation();
+            } else {
+                startDictation();
+            }
+        }
+        
+        function startDictation() {
+            if (!recognition) return;
+            
+            try {
+                recognition.start();
+                isRecording = true;
+                
+                // Update UI
+                const micBtn = document.getElementById('mic-btn');
+                micBtn.classList.add('recording');
+                micBtn.title = 'Stop voice dictation';
+                
+                // Update button text
+                const micBtnText = micBtn.querySelector('.mic-btn-text');
+                micBtnText.innerHTML = '<span class="recording-indicator"></span>Stop';
+                
+                showStatusMessage('Voice dictation started. Speak now...');
+            } catch (error) {
+                console.error('Error starting speech recognition:', error);
+                showStatusMessage('Error starting speech recognition');
+            }
+        }
+        
+        function stopDictation() {
+            if (!recognition) return;
+            
+            try {
+                recognition.stop();
+                isRecording = false;
+                
+                // Update UI
+                const micBtn = document.getElementById('mic-btn');
+                micBtn.classList.remove('recording');
+                micBtn.title = 'Start voice dictation';
+                
+                // Update button text
+                const micBtnText = micBtn.querySelector('.mic-btn-text');
+                micBtnText.textContent = 'Start';
+                
+                showStatusMessage('Voice dictation stopped');
+            } catch (error) {
+                console.error('Error stopping speech recognition:', error);
+            }
+        }
+        
+        function switchView(view) {
+            currentView = view;
+            
+            // Update buttons
+            document.getElementById('list-view-btn').classList.toggle('active', view === 'list');
+            document.getElementById('calendar-view-btn').classList.toggle('active', view === 'calendar');
+            
+            // Show/hide views
+            document.getElementById('entries-list').style.display = view === 'list' ? 'block' : 'none';
+            document.getElementById('calendar-view').style.display = view === 'calendar' ? 'block' : 'none';
+            
+            if (view === 'calendar') {
+                renderCalendar();
+            }
+        }
+        
+        function renderCalendar() {
+            // Update both the inline calendar and modal calendar
+            updateCalendarView('calendar-days', 'calendar-month');
+            updateCalendarView('modal-calendar-days', 'modal-calendar-month');
+            
+            // If a date is selected, show its entries
+            if (selectedDate) {
+                showEntriesForDate(selectedDate);
+            }
+        }
+        
+        function updateCalendarView(daysContainerId, monthContainerId) {
+            const calendarDays = document.getElementById(daysContainerId);
+            const calendarMonth = document.getElementById(monthContainerId);
+            const entries = getSavedEntries();
+            
+            if (!calendarDays || !calendarMonth) return;
+            
+            // Set month and year in header
+            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 
+                               'July', 'August', 'September', 'October', 'November', 'December'];
+            calendarMonth.textContent = `${monthNames[currentCalendarDate.getMonth()]} ${currentCalendarDate.getFullYear()}`;
+            
+            // Clear previous calendar
+            calendarDays.innerHTML = '';
+            
+            // Get first day of month and last day of month
+            const firstDay = new Date(currentCalendarDate.getFullYear(), currentCalendarDate.getMonth(), 1);
+            const lastDay = new Date(currentCalendarDate.getFullYear(), currentCalendarDate.getMonth() + 1, 0);
+            
+            // Get the day of week for the first day (0 = Sunday, 6 = Saturday)
+            const firstDayOfWeek = firstDay.getDay();
+            
+            // Add days from previous month
+            const prevMonthLastDay = new Date(currentCalendarDate.getFullYear(), currentCalendarDate.getMonth(), 0).getDate();
+            for (let i = 0; i < firstDayOfWeek; i++) {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day other-month';
+                dayElement.textContent = prevMonthLastDay - firstDayOfWeek + i + 1;
+                calendarDays.appendChild(dayElement);
+            }
+            
+            // Create entry date map for quick lookup
+            const entryDates = {};
+            entries.forEach(entry => {
+                const date = entry.date.split('T')[0];
+                if (!entryDates[date]) {
+                    entryDates[date] = [];
+                }
+                entryDates[date].push(entry);
+            });
+            
+            // Add days for current month
+            for (let i = 1; i <= lastDay.getDate(); i++) {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day';
+                dayElement.textContent = i;
+                
+                // Format date string for comparison (YYYY-MM-DD)
+                const dateStr = `${currentCalendarDate.getFullYear()}-${String(currentCalendarDate.getMonth() + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
+                
+                // Check if this day has entries
+                if (entryDates[dateStr] && entryDates[dateStr].length > 0) {
+                    dayElement.classList.add('has-entry');
+                    
+                    // Add click handler to show entries for this day
+                    dayElement.addEventListener('click', () => {
+                        selectCalendarDay(dateStr);
+                    });
+                }
+                
+                // Check if this day is selected
+                if (selectedDate === dateStr) {
+                    dayElement.classList.add('selected');
+                }
+                
+                calendarDays.appendChild(dayElement);
+            }
+            
+            // Add days from next month to fill the grid
+            const totalDaysShown = firstDayOfWeek + lastDay.getDate();
+            const remainingCells = 42 - totalDaysShown; // 6 rows of 7 days = 42
+            
+            for (let i = 1; i <= remainingCells; i++) {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day other-month';
+                dayElement.textContent = i;
+                calendarDays.appendChild(dayElement);
+            }
+        }
+        
+        function prevMonth() {
+            currentCalendarDate.setMonth(currentCalendarDate.getMonth() - 1);
+            renderCalendar();
+        }
+        
+        function nextMonth() {
+            currentCalendarDate.setMonth(currentCalendarDate.getMonth() + 1);
+            renderCalendar();
+        }
+        
+        function selectCalendarDay(dateStr) {
+            selectedDate = dateStr;
+            renderCalendar();
+            showEntriesForDate(dateStr);
+        }
+        
+        function showEntriesForDate(dateStr) {
+            const calendarEntries = document.getElementById('calendar-entries');
+            const entries = getSavedEntries().filter(entry => entry.date === dateStr);
+            
+            calendarEntries.innerHTML = '';
+            
+            if (entries.length === 0) {
+                calendarEntries.innerHTML = `<p>No entries for ${dateStr}</p>`;
+                return;
+            }
+            
+            // Sort entries by last saved time (newest first)
+            entries.sort((a, b) => new Date(b.lastSaved || b.date) - new Date(a.lastSaved || a.date));
+            
+            // Create header
+            const header = document.createElement('h3');
+            header.textContent = `Entries for ${dateStr}`;
+            calendarEntries.appendChild(header);
+            
+            // Create entry list
+            entries.forEach(entry => {
+                const entryItem = document.createElement('div');
+                entryItem.className = 'entry-item';
+                
+                // Add active class if this is the current entry
+                if (entry.id === currentEntry.id) {
+                    entryItem.classList.add('active');
+                }
+                
+                const promptPreview = entry.prompt 
+                    ? entry.prompt.substring(0, 30) + (entry.prompt.length > 30 ? '...' : '')
+                    : 'No prompt';
+                
+                // Create entry content div (clickable)
+                const entryContent = document.createElement('div');
+                entryContent.className = 'entry-content';
+                entryContent.innerHTML = `
+                    <strong>${entry.date}</strong>: ${promptPreview}
+                `;
+                
+                // Add click event to the content area
+                entryContent.onclick = function() {
+                    console.log('Entry clicked:', entry);
+                    loadEntryToEditor(entry);
+                };
+                
+                // Create delete button
+                const deleteBtn = document.createElement('button');
+                deleteBtn.className = 'delete-btn';
+                deleteBtn.textContent = 'Delete';
+                deleteBtn.onclick = function(e) {
+                    e.stopPropagation(); // Prevent triggering the parent's click event
+                    deleteEntry(entry.id);
+                };
+                
+                // Add elements to entry item
+                entryItem.appendChild(entryContent);
+                entryItem.appendChild(deleteBtn);
+                
+                calendarEntries.appendChild(entryItem);
+            });
+        }
+    </script>
 </body>
-</html>
+</html> 
